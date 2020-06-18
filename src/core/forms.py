@@ -7,6 +7,7 @@ CHOICE_FIELDS = (
     ('P', 'Paypal')
 )
 
+
 class CheckoutForm(forms.Form):
     street_adress = forms.CharField(widget=forms.TextInput(attrs={
         'placeholder': '1234 Main St',
@@ -17,12 +18,11 @@ class CheckoutForm(forms.Form):
     country = CountryField(blank_label='select country').formfield(
         widget=CountrySelectWidget,
         attrs={
-        'class': 'custom-select d-block w-100'
-    }
+            'class': 'custom-select d-block w-100'
+        }
     )
     zip_code = forms.CharField(widget=forms.TextInput())
     same_billing_address = forms.BooleanField(required=False, widget=forms.CheckboxInput())
     save_info = forms.BooleanField(required=False, widget=forms.CheckboxInput())
     payment_option = forms.ChoiceField(widget=forms.RadioSelect, choices=CHOICE_FIELDS)
-    for value , name in payment_option.choices:
-        print("value and name", value, name)
+

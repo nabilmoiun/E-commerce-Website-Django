@@ -15,6 +15,7 @@ LABEL_CHOICES = (
     ('D', 'danger')
 )
 
+
 class Item(models.Model):
     item_name = models.CharField(max_length = 100)
     price = models.FloatField()
@@ -28,18 +29,19 @@ class Item(models.Model):
 
     def get_absolute_url(self):
         return reverse('core:products', kwargs={
-            'slug':self.slug
+            'slug': self.slug
         })
 
     def get_add_to_cart(self):
         return reverse('core:add_to_cart', kwargs={
-            'slug':self.slug
+            'slug': self.slug
         })
 
     def remove_from_the_cart(self):
         return reverse('core:remove_from_the_cart', kwargs={
             'slug':self.slug
         })
+
 
 class OrderItem(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
@@ -62,7 +64,8 @@ class OrderItem(models.Model):
         else:
             return self.get_total_price()
 
-class Order(models.Model):
+
+class Cart(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     items = models.ManyToManyField(OrderItem)
     billing_address = models.ForeignKey('BillingAddress', models.SET_NULL, blank=True, null=True)
@@ -78,6 +81,7 @@ class Order(models.Model):
         for order_item in self.items.all():
             total = total + order_item.get_final_price()
         return total
+
 
 class BillingAddress(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
