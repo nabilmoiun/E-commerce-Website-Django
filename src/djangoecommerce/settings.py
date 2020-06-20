@@ -138,3 +138,6 @@ AUTHENTICATION_BACKENDS = (
     'allauth.account.auth_backends.AuthenticationBackend',
 )
 
+STRIPE_SECRET_KEY = "sk_test_51GvNGpF1Kx07FALz9hM3inSUkBNreizbKKcw3K0SLZv7OWFYbwl0cxrHzIURjxluSuozJB6oDTYx5M9UBZRJTFHE00GMDrVuNk "
+
+STRIPE_PUBLISHABLE_KEY = "pk_test_51GvNGpF1Kx07FALzAC2KLiZsRu8GxPrRYt3nLosu3jZ3sUZ19EqYh53VSMHBIh5hIjmUMyaw6zblLqs3HacQoFfu00E7valQea"
