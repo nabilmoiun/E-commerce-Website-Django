@@ -3,12 +3,6 @@ from django.conf import settings
 from django.shortcuts import reverse
 from django_countries.fields import CountryField
 
-CATEGORY_CHOICES = (
-    ('S', 'Shirt'),
-    ('SW', 'Sports wear'),
-    ('O', 'Outewar')
-)
-
 LABEL_CHOICES = (
     ('P', 'primary'),
     ('S', 'secondary'),
@@ -16,11 +10,19 @@ LABEL_CHOICES = (
 )
 
 
+class Category(models.Model):
+    category = models.CharField(max_length=30)
+
+    def __str__(self):
+        return self.category
+
+
 class Item(models.Model):
-    item_name = models.CharField(max_length = 100)
+    item_name = models.CharField(max_length=100)
+    item_category = models.ForeignKey(Category, on_delete=models.CASCADE)
     price = models.FloatField()
     discount_price = models.FloatField(blank=True, null=True)
-    category = models.CharField(choices=CATEGORY_CHOICES, max_length=2)
+    item_image = models.ImageField(upload_to='items_images/')
     labels = models.CharField(choices=LABEL_CHOICES, max_length=2)
     slug = models.SlugField()
 
@@ -69,6 +71,7 @@ class Cart(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     items = models.ManyToManyField(OrderItem)
     billing_address = models.ForeignKey('BillingAddress', models.SET_NULL, blank=True, null=True)
+    payment = models.ForeignKey('Payment', models.SET_NULL, blank=True, null=True)
     start_date = models.DateTimeField(auto_now_add=True)
     ordered_date = models.DateTimeField()
     ordered = models.BooleanField(default=False)
@@ -92,5 +95,16 @@ class BillingAddress(models.Model):
 
     def __str__(self):
         return self.user.username
+
+
+class Payment(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, blank=True, null=True)
+    stripe_charge_id = models.CharField(max_length=50)
+    amount = models.IntegerField()
+    date = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return str(self.user)
+
 
 
