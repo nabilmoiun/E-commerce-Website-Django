@@ -1,0 +1,53 @@
+{% load cart_template_tags %}
+<nav class="mb-1 navbar navbar-expand-lg navbar-dark secondary-color lighten-1">
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent-555"
+    aria-controls="navbarSupportedContent-555" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarSupportedContent-555">
+    {% if not request.user.is_authenticated %}
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item active">
+        <a class="nav-link" href="/item_list/">Home
+          <span class="sr-only">(current)</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/accounts/login/">Login</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/accounts/signup/">Sign Up</a>
+      </li>
+    </ul>
+    {% else %}
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item">
+        <a class="nav-link" href="/item_list/">Home
+        </a>
+      </li>
+        <li class="nav-item">
+        <a class="nav-link waves-effect" href="/order_summary/">{{ request.user|cart_item_count }}
+          <i class="fas fa-shopping-cart"></i>
+        </a>
+      </li>
+      <li class="nav-item active">
+        <a class="nav-link" href="#">{{request.user}}
+          <span class="sr-only">(current)</span>
+        </a>
+      </li>
+        <li class="nav-item">
+        <a class="nav-link" href="/accounts/password/change/">Reset Password
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/accounts/logout/">Logout</a>
+      </li>
+      <li class="nav-item">
+      <a class="nav-link" href="/request_refund/">Request Refund</a>
+      </li>
+    </ul>
+    <ul class="navbar-nav ml-auto nav-flex-icons">
+      {% endif %}
+    </ul>
+  </div>
+</nav>

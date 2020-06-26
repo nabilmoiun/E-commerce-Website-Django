@@ -1,0 +1,17 @@
+<main>
+    <div class="container">
+      <section class="mb-4">
+        <div class="row wow fadeIn">
+          <div class='col-6 offset-3'>
+              <form>
+                   {% csrf_token %}
+                    {{ form|crispy }}
+                    <button type="submit" class="btn btn-primary">
+                      Submit
+                  </button>
+                </form>
+          </div>
+        </div>
+      </section>
+    </div>
+ </main>

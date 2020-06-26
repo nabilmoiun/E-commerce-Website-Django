@@ -1,0 +1,86 @@
+{% extends 'base.html' %}
+{% block content %}
+{% load static %}
+{% load pagination %}
+  <main>
+    <div class="container">
+
+      {% include 'category.html' %}
+
+      <!--Section: Products v.3-->
+      <section class="text-center mb-4">
+
+        <!--Grid row-->
+        <div class="row wow fadeIn">
+            {% for item in object_list %}
+          <div class="col-lg-3 col-md-6 mb-4">
+
+            <div class="card">
+              <div class="view overlay">
+                <img src="{{item.item_image.url}}" width="240" height="240" class="card-img-top"
+                  alt="">
+                <a href="{{item.get_absolute_url}}">
+                  <div class="mask rgba-white-slight"></div>
+                </a>
+              </div>
+              <div class="card-body text-center">
+                <a href="" class="grey-text">
+                  <h5>{{item.item_category}}</h5>
+                </a>
+                <h5>
+                  <strong>
+                    <a href="{{item.get_absolute_url}}" class="dark-grey-text">{{item.item_name}}</a>
+                  </strong>
+                </h5>
+
+                <h4 class="font-weight-bold blue-text">
+                  <strong>${{item.price}}</strong>
+                </h4>
+
+              </div>
+
+            </div>
+
+          </div>
+          {% endfor %}
+          {% if object_list.count == 0 %}
+          <div>
+            <h1 style="text-align: center;">No items found</h1>
+          </div>
+          {% endif %}
+      </div>
+      </section>
+      <!--Section: Products v.3-->
+
+      <!--Pagination-->
+      {% if is_paginated %}
+      <nav aria-label="d-flex justify-content-center wow fadeIn">
+  <ul class="pagination pg-blue justify-content-center">
+    {% if page_obj.has_previous %}
+    <li class="page-item">
+      <a class="page-link" aria-label="Previous" href="?page={{page_obj.previous_page_number}}">
+        <span aria-hidden="true">&laquo;</span>
+        <span class="sr-only">Previous</span>
+      </a>
+    </li>
+    {% endif %}
+    {% for page in page_obj.paginator.num_pages|paginate %}
+    <li class="page-item"><a class="page-link" href="http://localhost:8000/item_list/?page={{page}}">{{page}}</a></li>
+    {% endfor %}
+    {% if page_obj.has_next %}
+    <li class="page-item">
+      <a class="page-link" aria-label="Next" href="?page={{page_obj.next_page_number}}">
+        <span aria-hidden="true">&raquo;</span>
+        <span class="sr-only">Next</span>
+      </a>
+    </li>
+    {% endif %}
+  </ul>
+</nav>
+{% endif %}
+    </div>
+  </main>
+
+{% endblock %}
+  
+
