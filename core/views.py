@@ -63,7 +63,7 @@ class OrderSummary(LoginRequiredMixin, View):
             }
             return render(self.request, 'order_summary.html', context)
         except ObjectDoesNotExist:
-            return redirect('/item_list/')
+            return redirect('/')
 
 
 @login_required
@@ -177,7 +177,7 @@ def is_valid_form(list_of_values):
     return valid
 
 
-class CheckoutView(View):
+class CheckoutView(LoginRequiredMixin, View):
     def get(self, *args, **kwargs):
         form = CheckoutForm()
         try:
@@ -203,7 +203,7 @@ class CheckoutView(View):
             return render(self.request, 'checkout-page.html', context)
         except ObjectDoesNotExist:
             messages.info(self.request, "you dont have any order")
-            return redirect("/item_list/")
+            return redirect("/")
 
     def post(self, *args, **kwargs):
         form = CheckoutForm(self.request.POST or None)
@@ -310,7 +310,7 @@ class CheckoutView(View):
             return redirect("core:checkout")
 
 
-class AddCouponView(View):
+class AddCouponView(LoginRequiredMixin, View):
     def post(self, *args, **kwargs):
         order = Cart.objects.get(user=self.request.user, ordered=False)
         coupon_code = self.request.POST['coupon_code']
@@ -332,7 +332,7 @@ def generate_reference_code():
                                   + string.digits, k=20))
 
 
-class PaymentView(View):
+class PaymentView(LoginRequiredMixin, View):
     def get(self, *args, **kwargs):
         try:
             order = Cart.objects.get(user=self.request.user, ordered=False)
@@ -430,7 +430,7 @@ class PaymentView(View):
                 order.ordered = True
                 order.save()
             messages.success(self.request, "Payment successful")
-            return redirect("/item_list/")
+            return redirect("/")
 
         except stripe.error.CardError as e:
             body = e.json_body
@@ -487,14 +487,14 @@ class RequestRefundView(LoginRequiredMixin, View):
                 is_refund_already_requested = Refund.objects.filter(reference_code=reference_code)
                 if is_refund_already_requested.exists():
                     messages.info(self.request, "Refund already requested for this order")
-                    return redirect('/item_list/')
+                    return redirect('/')
                 order = Cart.objects.get(reference_code=reference_code)
                 order.refund_requested = True
                 order.save()
                 refund = Refund.objects.create(order=order, **refund_form.cleaned_data)
                 refund.save()
                 messages.info(self.request, "Your request was successful")
-                return redirect("/item_list/")
+                return redirect("/")
             except ObjectDoesNotExist:
                 messages.info(self.request, "No such order with that reference code")
                 return redirect("/request_refund/")

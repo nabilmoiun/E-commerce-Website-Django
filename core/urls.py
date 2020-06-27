@@ -7,7 +7,7 @@ from .views import (HomeView, ItemDetailView, add_to_cart, remove_from_the_cart,
 app_name = 'core'
 
 urlpatterns = [
-    path('item_list/',
+    path('',
          HomeView.as_view(), name='item_list'),
     path('item_list/<category_name>/',
          HomeView.as_view(), name='item_list_by_category'),
