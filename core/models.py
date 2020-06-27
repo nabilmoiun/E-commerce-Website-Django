@@ -93,8 +93,10 @@ class OrderItem(models.Model):
 class Cart(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     items = models.ManyToManyField(OrderItem)
-    billing_address = models.ForeignKey('Address', related_name='billing_address', on_delete=models.SET_NULL, blank=True, null=True)
-    shipping_address = models.ForeignKey('Address', related_name='shipping_address', on_delete=models.SET_NULL, blank=True, null=True)
+    billing_address = models.ForeignKey('Address', related_name='billing_address',
+                                        on_delete=models.SET_NULL, blank=True, null=True)
+    shipping_address = models.ForeignKey('Address', related_name='shipping_address',
+                                         on_delete=models.SET_NULL, blank=True, null=True)
     payment = models.ForeignKey('Payment', models.SET_NULL, blank=True, null=True)
     coupon = models.ForeignKey('Coupon', models.SET_NULL, blank=True, null=True)
     start_date = models.DateTimeField(auto_now_add=True)
@@ -157,6 +159,16 @@ class Refund(models.Model):
 
     def __str__(self):
         return str(self.pk)
+
+
+class Comment(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    item = models.ForeignKey(Item, on_delete=models.CASCADE)
+    comment = models.TextField()
+    date = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.comment
 
 
 def user_profile_receiver(sender, instance, created, *args, **kwargs):

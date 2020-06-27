@@ -3,6 +3,8 @@ from django import forms
 from django_countries.fields import CountryField
 from django_countries.widgets import CountrySelectWidget
 
+from .models import Comment
+
 CHOICE_FIELDS = (
     ('S', 'Stripe'),
     ('P', 'Paypal')
@@ -55,3 +57,12 @@ class RefundForm(forms.Form):
         "row": 2
     }))
     email = forms.EmailField()
+
+
+class CommentForm(forms.Form):
+    comment = forms.CharField(widget=forms.Textarea(attrs={
+        "cols": 10,
+        "rows": 4,
+        "row": 2,
+        "class": "autoExpand forumPost form-control"
+    }))

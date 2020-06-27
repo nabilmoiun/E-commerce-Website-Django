@@ -12,10 +12,9 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import ListView, DeleteView, View
 from django.shortcuts import render, get_object_or_404, redirect
 
-from .forms import CheckoutForm, CouponForm, RefundForm
-from .models import (Item, Cart, OrderItem, Address,
-                     Payment, Coupon, Refund, Category,
-                     UserProfile)
+from .forms import CheckoutForm, CouponForm, RefundForm, CommentForm
+from .models import (Item, Cart, OrderItem, Address, Comment, Payment, Coupon,
+                     Refund, Category, UserProfile)
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
 
@@ -50,6 +49,23 @@ class HomeView(ListView):
 class ItemDetailView(DeleteView):
     model = Item
     template_name = "product-page.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['form'] = CommentForm()
+        return context
+
+
+@login_required
+def add_comment_to_item(request, slug):
+    item = get_object_or_404(Item, slug=slug)
+    comment = request.POST['comment']
+    Comment(
+        user=request.user,
+        item=item,
+        comment=comment
+    ).save()
+    return redirect("core:products", slug=slug)
 
 
 class OrderSummary(LoginRequiredMixin, View):
@@ -498,3 +514,19 @@ class RequestRefundView(LoginRequiredMixin, View):
             except ObjectDoesNotExist:
                 messages.info(self.request, "No such order with that reference code")
                 return redirect("/request_refund/")
+
+
+class CustomerProfileView(LoginRequiredMixin, View):
+    def get(self, slug, *args, **kwargs):
+        orders = Cart.objects.filter(user=self.request.user, ordered=True)
+        print(orders)
+        if orders.exists():
+            context = {
+                "orders": orders
+            }
+            return render(self.request, 'customer_profile.html', context)
+        else:
+            messages.info(self.request, "You have not yet ordered anything from our site")
+            return redirect("item/list/")
+
+

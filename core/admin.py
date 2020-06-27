@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import (Item, OrderItem, Cart, Address, Category,
+from .models import (Item, OrderItem, Cart, Address, Category, Comment,
                      Payment, Coupon, Refund, UserProfile)
 
 admin.site.register(UserProfile)
@@ -69,3 +69,12 @@ class RefundAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Refund, RefundAdmin)
+
+
+class CommentAdmin(admin.ModelAdmin):
+    class Meta:
+        model = Comment
+    list_display = ['__str__', 'user']
+
+
+admin.site.register(Comment, CommentAdmin)

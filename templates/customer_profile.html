@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block content %}
+{% for order in orders %}
+<ul>
+    <li> {{forloop.counter}}
+        <p>
+            Reference Code {{order.reference_code}}
+        </p>
+        <ul>Ordered Items
+            {% for item in order.items.all %}
+            <li>
+                name : {{item.item.item_name}}
+            </li>
+            {% endfor %}
+        </ul>
+        {% if order.coupon %}
+        <p>
+            Coupon : {{order.coupon}}
+        </p>
+        {% endif %}
+        <p>
+            Total Amount {{order.payment.amount}}
+        </p>
+    </li>
+</ul>
+{% endfor %}
+{% endblock content %}

@@ -76,7 +76,6 @@ Getting Started
 Finally, you have to make migrations to get the app started and create a new superuser to interact with the admin dashboard.
 So run the following commands as follows:
 
-    $ python manage.py makemigrations
     $ python manage.py migrate
     $ python manage.py createsuperuser --user <username> --email <email>
 
