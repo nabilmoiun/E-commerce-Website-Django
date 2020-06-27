@@ -7,7 +7,7 @@ SECRET_KEY = CONFIG['SECRET_KEY']
 
 DEBUG = True
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'nabil.pythonanywhere.com']
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -104,7 +104,7 @@ AUTHENTICATION_BACKENDS = (
 
 SITE_ID = 1
 
-LOGIN_REDIRECT_URL = '/item_list/'
+LOGIN_REDIRECT_URL = '/'
 
 ACCOUNT_LOGOUT_REDIRECT_URL = "/accounts/login"
 

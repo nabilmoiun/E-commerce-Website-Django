@@ -65,7 +65,7 @@
     </li>
     {% endif %}
     {% for page in page_obj.paginator.num_pages|paginate %}
-    <li class="page-item"><a class="page-link" href="http://localhost:8000/item_list/?page={{page}}">{{page}}</a></li>
+    <li class="page-item"><a class="page-link" href="http://localhost:8000/?page={{page}}">{{page}}</a></li>
     {% endfor %}
     {% if page_obj.has_next %}
     <li class="page-item">
