@@ -61,8 +61,7 @@ class RefundForm(forms.Form):
 
 class CommentForm(forms.Form):
     comment = forms.CharField(widget=forms.Textarea(attrs={
-        "cols": 10,
-        "rows": 4,
-        "row": 2,
-        "class": "autoExpand forumPost form-control"
+        "cols": 200,
+        "rows": 3,
+        "class": "form-control"
     }))

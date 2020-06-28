@@ -1,27 +1,66 @@
 {% extends 'base.html' %}
 {% block content %}
-{% for order in orders %}
-<ul>
-    <li> {{forloop.counter}}
-        <p>
-            Reference Code {{order.reference_code}}
-        </p>
-        <ul>Ordered Items
-            {% for item in order.items.all %}
-            <li>
-                name : {{item.item.item_name}}
-            </li>
-            {% endfor %}
-        </ul>
-        {% if order.coupon %}
-        <p>
-            Coupon : {{order.coupon}}
-        </p>
-        {% endif %}
-        <p>
-            Total Amount {{order.payment.amount}}
-        </p>
-    </li>
-</ul>
-{% endfor %}
+<h2 class="h2 text-center">Order History</h2>
+<br>
+<table class="table table-hover">
+  <thead>
+    <tr>
+      <th scope="col">Order</th>
+      <th scope="col">Date</th>
+      <th scope="col">Items</th>
+      <th scope="col">Total</th>
+      <th scope="col">Reference Code</th>
+      <th scope="col">Request Refund</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+        {% for order in orders %}
+        <th><strong>{{forloop.counter}}</strong></th>
+        <td><strong>{{order.ordered_date|date:'Y/m/d'}}</strong></td>
+      <td>
+          {% for item in order.items.all %}
+          <li style="list-style-type:none;">
+              <strong>{{item.item.item_name}}</strong>
+          </li>
+          {% endfor %}
+
+      </td>
+        <td><strong>{{order.payment.amount}}</strong></td>
+        <td><strong>{{order.reference_code}}</strong></td>
+        <td><a style="color:blue;" href="/request_refund/"><b><strong>Refund</strong></b></a></td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
 {% endblock content %}
+
+
+
+
+
+
+<!--{% for order in orders %}-->
+<!--<ul>-->
+<!--    <li> {{forloop.counter}}-->
+<!--        <p>-->
+<!--            Reference Code {{order.reference_code}}-->
+<!--        </p>-->
+<!--        <ul>Ordered Items-->
+<!--            {% for item in order.items.all %}-->
+<!--            <li>-->
+<!--                name : {{item.item.item_name}}-->
+<!--            </li>-->
+<!--            {% endfor %}-->
+<!--        </ul>-->
+<!--        {% if order.coupon %}-->
+<!--        <p>-->
+<!--            Coupon : {{order.coupon}}-->
+<!--        </p>-->
+<!--        {% endif %}-->
+<!--        <p>-->
+<!--            Total Amount {{order.payment.amount}}-->
+<!--        </p>-->
+<!--    </li>-->
+<!--</ul>-->
+<!--{% endfor %}-->

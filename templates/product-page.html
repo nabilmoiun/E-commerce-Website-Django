@@ -80,13 +80,14 @@
       <!--Grid row-->
 
       <hr>
-      <form action="{% url 'core:comments' slug=object.slug %}" method="post">
-           {% csrf_token %}
-            {{ form|crispy }}
-            <button type="submit" class="btn btn-primary">
-              Submit
-          </button>
-        </form>
+
+<!--      <form action="{% url 'core:comments' slug=object.slug %}" method="post">-->
+<!--           {% csrf_token %}-->
+<!--            {{ form|crispy }}-->
+<!--            <button type="submit" class="btn btn-primary">-->
+<!--              Submit-->
+<!--          </button>-->
+<!--        </form>-->
 
       <!--Grid row-->
 <!--      <div class="row d-flex justify-content-center wow fadeIn">-->
@@ -138,16 +139,6 @@
 
     </div>
   </main>
-
-
-
-
-
-
-
-
-
-
 
 {% endblock %}
 
