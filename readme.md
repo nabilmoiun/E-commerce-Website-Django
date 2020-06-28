@@ -3,7 +3,7 @@ E-commerece Website
 
 This is an E-commerece website developed mainly to focus on Django following along the ***justdjango*** channel.I used a free template from [mdbootstrap](https://mdbootstrap.com/snippets/jquery/mdbootstrap/50504?action=full_screen_mode). I have developed most common features that an usual e-commerece website contains. I wrote both ***generic class based*** and ***functional*** views in the backend. The database I am using is the default django's ***Sqlite***. Another interesting thing was using the ***Stripe Api*** for handling the payment process.
 
-I have also deployed the project on [pythonanywhere.com](https://www.pythonanywhere.com/). The project can be viewed live on this domain [nabil.pythonanywhere.com](https://www.nabil.pythonanywhere.com/)
+I have also deployed the project on [pythonanywhere.com](https://www.pythonanywhere.com/). The project can be viewed live on this domain ***nabil.pythonanywhere.com***
 
 Here I am noting down some of the features below and I will instruct you through the process to this run this project on your local machine if you are interested.
 
@@ -130,4 +130,4 @@ I have used ***Stripe*** for handling payment of the order. Stripe officially pr
 Deployment
 ====================
 
-As I have mentioned firstly, the project in deployed on [pythonanywhere.com](https://www.pythonanywhere.com/) with free hosting facility and can be viewed live on this domain [nabil.pythonanywhere.com](https://www.nabil.pythonanywhere.com/)
+As I have mentioned firstly, the project in deployed on [pythonanywhere.com](https://www.pythonanywhere.com/) with free hosting facility and can be viewed live on this domain ***nabil.pythonanywhere.com***
