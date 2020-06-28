@@ -22,8 +22,8 @@ stripe.api_key = settings.STRIPE_SECRET_KEY
 class HomeView(ListView):
     model = Item
     template_name = "home-page.html"
-    paginate_by = 2
-    ordering = 'id'
+    paginate_by = 8
+    ordering = '-id'
 
     def get_queryset(self):
         queryset = Item.objects.all()
@@ -176,7 +176,7 @@ def remove_single_from_the_cart(request, slug):
             else:
                 order_item.quantity -= 1
                 order_item.save()
-            messages.info(request, "This item was removed from your cart")
+            messages.info(request, "This quantity was updated")
         else:
             messages.info(request, "This item is not in your cart")
     else:
@@ -489,6 +489,10 @@ class PaymentView(LoginRequiredMixin, View):
 
 class RequestRefundView(LoginRequiredMixin, View):
     def get(self, *args, **kwargs):
+        orders = Cart.objects.filter(user=self.request.user, ordered=True)
+        if not orders.exists():
+            messages.info(self.request, "You have no orders yet, happy shopping !!")
+            return redirect('/')
         refund_form = RefundForm()
         context = {
             "form": refund_form
@@ -500,26 +504,30 @@ class RequestRefundView(LoginRequiredMixin, View):
         if refund_form.is_valid():
             reference_code = refund_form.cleaned_data['reference_code']
             try:
+                is_refund_already_granted = Cart.objects.filter(reference_code=reference_code, refund_granted=True)
                 is_refund_already_requested = Refund.objects.filter(reference_code=reference_code)
-                if is_refund_already_requested.exists():
+                if is_refund_already_granted.exists():
+                    messages.info(self.request, "Already Refunded")
+                    return redirect('core:customer_profile')
+                elif is_refund_already_requested.exists():
                     messages.info(self.request, "Refund already requested for this order")
-                    return redirect('/')
-                order = Cart.objects.get(reference_code=reference_code)
-                order.refund_requested = True
-                order.save()
-                refund = Refund.objects.create(order=order, **refund_form.cleaned_data)
-                refund.save()
-                messages.info(self.request, "Your request was successful")
-                return redirect("/")
+                    return redirect('core:customer_profile')
+                else:
+                    order = Cart.objects.get(reference_code=reference_code)
+                    order.refund_requested = True
+                    order.save()
+                    refund = Refund.objects.create(order=order, **refund_form.cleaned_data)
+                    refund.save()
+                    messages.info(self.request, "Your request was successful")
+                    return redirect("core:customer_profile")
             except ObjectDoesNotExist:
                 messages.info(self.request, "No such order with that reference code")
-                return redirect("/request_refund/")
+                return redirect("core:customer_profile")
 
 
 class CustomerProfileView(LoginRequiredMixin, View):
     def get(self, slug, *args, **kwargs):
         orders = Cart.objects.filter(user=self.request.user, ordered=True)
-        print(orders)
         if orders.exists():
             context = {
                 "orders": orders
@@ -527,6 +535,4 @@ class CustomerProfileView(LoginRequiredMixin, View):
             return render(self.request, 'customer_profile.html', context)
         else:
             messages.info(self.request, "You have not yet ordered anything from our site")
-            return redirect("item/list/")
-
-
+            return redirect("/")

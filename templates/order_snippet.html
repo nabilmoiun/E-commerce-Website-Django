@@ -10,7 +10,7 @@
       <h6 class="my-0">{{ order_item.quantity }} x {{ order_item.item.item_name}}</h6>
       <small class="text-muted">{{ order_item.item.description|truncatewords:10}}</small>
       </div>
-      <span class="text-muted">${{ order_item.get_final_price }}</span>
+      <span class="text-muted">{{ order_item.get_final_price }}</span>
   </li>
   {% endfor %}
   {% if orders.coupon %}
@@ -19,17 +19,18 @@
       <h6 class="my-0">{{orders.coupon.coupon}}</h6>
       <small>{{ orders.coupon.code }}</small>
       </div>
-      <span class="text-success">-${{ orders.coupon.amount }}</span>
+      <span class="text-success">-{{ orders.coupon.amount }}</span>
   </li>
   {% endif %}
   <li class="list-group-item d-flex justify-content-between">
-      <span>Total (USD)</span>
-      <strong>${{ orders.get_total }}</strong>
+      <span>Total (BDT)</span>
+      <strong>{{ orders.get_total }}</strong>
   </li>
   </ul>
 
   {% if DISPLAY_COUPON_FORM %}
   <form class="card p-2" action="{% url 'core:add_coupon' %}" method="POST">
+      <p>Promo Code = Django</p>
       {% csrf_token %}
       <div class="input-group">
           {{ coupon_form.coupon_code }}

@@ -1,3 +1,4 @@
+media
 form.txt
 ecom/
 # Byte-compiled / optimized / DLL files
@@ -10,6 +11,7 @@ __pycache__/
 
 # Distribution / packaging
 .Python
+
 build/
 develop-eggs/
 dist/
@@ -107,7 +109,6 @@ celerybeat.pid
 *.sage.py
 
 # Environments
-.env
 .venv
 env/
 venv/

@@ -21,14 +21,20 @@
       <td>
           {% for item in order.items.all %}
           <li style="list-style-type:none;">
-              <strong>{{item.item.item_name}}</strong>
+              <strong>{{item}}</strong>
           </li>
           {% endfor %}
 
       </td>
         <td><strong>{{order.payment.amount}}</strong></td>
         <td><strong>{{order.reference_code}}</strong></td>
+        {% if order.refund_requested %}
+        <td><b><strong style="color:red;">Refund Requested</strong></b></td>
+        {% elif order.refund_granted %}
+        <td><b><strong style="color:green;">Refund Granted</strong></b></td>
+        {% else %}
         <td><a style="color:blue;" href="/request_refund/"><b><strong>Refund</strong></b></a></td>
+        {% endif %}
     </tr>
   {% endfor %}
   </tbody>
