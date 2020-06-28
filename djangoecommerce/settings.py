@@ -1,11 +1,11 @@
 import os
-from .config import CONFIG
+from decouple import config
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-SECRET_KEY = CONFIG['SECRET_KEY']
+SECRET_KEY = config('SECRET_KEY')
 
-DEBUG = True
+DEBUG = config('DEBUG')
 
 ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'nabil.pythonanywhere.com']
 
@@ -108,7 +108,6 @@ LOGIN_REDIRECT_URL = '/'
 
 ACCOUNT_LOGOUT_REDIRECT_URL = "/accounts/login"
 
-STRIPE_SECRET_KEY = CONFIG['STRIPE_SECRET_KEY']
+STRIPE_SECRET_KEY = config('STRIPE_SECRET_KEY')
 
-STRIPE_PUBLISHABLE_KEY = CONFIG['STRIPE_PUBLISHABLE_KEY']
-
+STRIPE_PUBLISHABLE_KEY = config('STRIPE_PUBLISHABLE_KEY')
