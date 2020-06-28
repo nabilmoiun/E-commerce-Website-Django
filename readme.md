@@ -8,6 +8,8 @@ I have also deployed the project on [pythonanywhere.com](https://www.pythonanywh
 Here I am noting down some of the features below and I will instruct you through the process to this run this project on your local machine if you are interested.
 
 
+
+
 Features
 ====================
 + User Authentication & Management Using ***django-allauth***
@@ -22,7 +24,7 @@ Features
 + Request Refund
 + Customized Default Django Admin Dashboard
 
-Directory layout
+Directory Layout
 ====================
 
 Django E-commerece Website App's directory structure looks as follows::
