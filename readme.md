@@ -1,7 +1,7 @@
-E-commerece Website
+E-commerce Website
 ====================
 
-This is an E-commerece website developed mainly to focus on Django following along the ***justdjango*** channel.I used a free template from [mdbootstrap](https://mdbootstrap.com/snippets/jquery/mdbootstrap/50504?action=full_screen_mode). I have developed most common features that an usual e-commerece website contains. I wrote both ***generic class based*** and ***functional*** views in the backend. The database I am using is the default django's ***Sqlite***. Another interesting thing was using the ***Stripe Api*** for handling the payment process.
+This is an E-commerce website developed mainly to focus on Django following along the ***justdjango*** channel. I used a free template from [mdbootstrap](https://mdbootstrap.com/snippets/jquery/mdbootstrap/50504?action=full_screen_mode) and developed most common features that an usual E-commerce website contains. I wrote both ***generic class based*** and ***functional*** views in the backend. The database I am using is the default django's ***Sqlite***. Another interesting thing was using the ***Stripe Api*** for handling the payment process.
 
 I have also deployed the project on [pythonanywhere.com](https://www.pythonanywhere.com/). The project can be viewed live on this domain ***nabil.pythonanywhere.com***
 
@@ -27,11 +27,11 @@ Features
 Directory Layout
 ====================
 
-Django E-commerece Website App's directory structure looks as follows::
+Django E-commerce Website App's directory structure looks as follows::
 
-    E-commerece-Website-Django/
+    E-commerce-Website-Django/
         |---core
-        |--djangoecommerece
+        |--djangoecommerce
         |---static
         |---static_in_env
         |---templates
@@ -51,7 +51,7 @@ I recommend you to have ***python >= 3.6*** installed on your machine to use thi
 First clone this repo and go to the project root.
 
     $ git clone https://github.com/MoinulHossainNabil/E-commerce-Website-Django.git
-    $ cd E-commerece-Website-Django
+    $ cd E-commerce-Website-Django
 
 I would recommend to work on a virtual environment. I have used ***virtualenv*** package to create a virtual environment you may wanna use other package. So install this as well if you already haven't.
 
