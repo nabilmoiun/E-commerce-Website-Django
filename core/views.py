@@ -41,8 +41,10 @@ class HomeView(ListView):
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
+        host = self.request.get_host()
         categories = Category.objects.all()
         context['categories'] = categories
+        context['host'] = host
         return context
 
 
@@ -51,8 +53,11 @@ class ItemDetailView(DeleteView):
     template_name = "product-page.html"
 
     def get_context_data(self, **kwargs):
+        slug = self.kwargs.get(self.slug_url_kwarg)
+        comments = Comment.objects.filter(item__slug=slug)
         context = super().get_context_data(**kwargs)
         context['form'] = CommentForm()
+        context['comments'] = comments
         return context
 
 

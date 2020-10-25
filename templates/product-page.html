@@ -80,14 +80,47 @@
       <!--Grid row-->
 
       <hr>
+        <div class="container">
+            {% if comments.count != 0 %}
+            <div class="row">
+                <p>Total Comments {{comments.count}}</p>
+            </div>
+            {% endif %}
+            <div class="row">
+                <ul class="list-unstyled">
+                    {% if comments %}
+                    {% for comment in comments %}
+                    <hr>
+                    <li class="media">
+                        <div class="media-body">
+                            <h6 class="lead card-text"> Posted by: {{comment.user.username}}</h6>
+                            <p class="lead card-text">{{comment}}</p>
+                            <p class="lead card-text">Posted on: <strong>{{comment.date}}</strong></p>
 
-<!--      <form action="{% url 'core:comments' slug=object.slug %}" method="post">-->
-<!--           {% csrf_token %}-->
+                        </div>
+                    </li>
+                    {% endfor %}
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+        {% if request.user.is_authenticated %}
+        <h4 class="my-4">Leave a comment</h4>
+      <form action="{% url 'core:comments' slug=object.slug %}" method="post">
+           {% csrf_token %}
 <!--            {{ form|crispy }}-->
-<!--            <button type="submit" class="btn btn-primary">-->
-<!--              Submit-->
-<!--          </button>-->
-<!--        </form>-->
+          <div class="form-group">
+              <textarea name="comment" cols="200" rows="3" class="form-control" placeholder="Write A Comment" required="" id="id_comment"></textarea>
+          </div>
+            <button type="submit" class="btn btn-primary">
+              Post
+          </button>
+        </form>
+        {% else %}
+        <div class="row mt-1 mb-2">
+            <a class="btn btn-danger text-black" type="button" href="/accounts/login/">Login to comment</a>
+        </div>
+        {% endif %}
 
       <!--Grid row-->
 <!--      <div class="row d-flex justify-content-center wow fadeIn">-->
