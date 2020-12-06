@@ -1,5 +1,6 @@
 media
 form.txt
+credentials.txt
 ecom/
 # Byte-compiled / optimized / DLL files
 __pycache__/
