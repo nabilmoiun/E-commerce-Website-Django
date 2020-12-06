@@ -1,5 +1,6 @@
 import random
 import string
+import socket
 
 import stripe
 from django.conf import settings
@@ -10,7 +11,12 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import ListView, DeleteView, View
-from django.shortcuts import render, get_object_or_404, redirect
+from django.views.decorators.csrf import csrf_exempt
+from django.shortcuts import render, get_object_or_404, redirect, reverse, HttpResponseRedirect
+
+import requests
+from decimal import Decimal
+from sslcommerz_python.payment import SSLCSession
 
 from .forms import CheckoutForm, CouponForm, RefundForm, CommentForm
 from .models import (Item, Cart, OrderItem, Address, Comment, Payment, Coupon,
@@ -323,6 +329,8 @@ class CheckoutView(LoginRequiredMixin, View):
                     return redirect("core:payment", payment_option="Stripe")
                 elif payment_option == "P":
                     return redirect("core:payment", payment_option="Paypal")
+                elif payment_option == "SSL":
+                    return redirect("core:payment", payment_option="SSL")
                 else:
                     # add redirect to selected payment method
                     return redirect("core:checkout")
@@ -355,6 +363,9 @@ def generate_reference_code():
 
 class PaymentView(LoginRequiredMixin, View):
     def get(self, *args, **kwargs):
+        payment_option = kwargs.get('payment_option')
+        if payment_option == "SSL":
+            return redirect('core:ssl_payment')
         try:
             order = Cart.objects.get(user=self.request.user, ordered=False)
             user_profile = self.request.user.userprofile
@@ -367,6 +378,7 @@ class PaymentView(LoginRequiredMixin, View):
                     'coupon_form': CouponForm(),
                     'DISPLAY_COUPON_FORM': False
                 }
+                
                 if user_profile.on_click_purchasing:
                     card_list = stripe.Customer.list_sources(
                         user_profile.stripe_customer_id,
@@ -436,22 +448,8 @@ class PaymentView(LoginRequiredMixin, View):
                     currency="usd",
                     source=stripe_charge_token
                 )
-            payment = Payment()
-            payment.user = self.request.user
-            payment.amount = amount
-            payment.stripe_charge_id = charge['id']
-            payment.save()
-
-            order.ordered = True
-            order.payment = payment
-            order.reference_code = generate_reference_code()
-            order.save()
-            users_order = OrderItem.objects.filter(user=self.request.user, ordered=False)
-            for order in users_order:
-                order.ordered = True
-                order.save()
-            messages.success(self.request, "Payment successful")
-            return redirect("/")
+            messages.success(self.request, "Stripe Payment Successful")
+            return redirect('core:complete_payment', tran_id=charge['id'], payment_type="S")
 
         except stripe.error.CardError as e:
             body = e.json_body
@@ -541,3 +539,59 @@ class CustomerProfileView(LoginRequiredMixin, View):
         else:
             messages.info(self.request, "You have not yet ordered anything from our site")
             return redirect("/")
+
+
+class SSLPayment(LoginRequiredMixin, View):
+    def get(self, *args, **kwargs):
+        order = Cart.objects.get(user=self.request.user, ordered=False)
+        no_of_items = order.items.count()
+        userprofile = UserProfile.objects.get(user=self.request.user)
+        amount = int(order.get_total())
+        billing_address = Address.objects.filter(user=self.request.user)[0]
+        status_url = self.request.build_absolute_uri(reverse('core:complete'))
+        mypayment = SSLCSession(sslc_is_sandbox=True, sslc_store_id=settings.SSLC_STORE_ID, sslc_store_pass=settings.SSLC_STORE_PASSWORD)
+        mypayment.set_urls(success_url=status_url, fail_url=status_url, cancel_url=status_url, ipn_url=status_url)
+        mypayment.set_product_integration(total_amount=Decimal(f'{amount}'), currency='BDT', product_category='clothing', product_name='demo-product', num_of_item=no_of_items, shipping_method='YES', product_profile=userprofile)
+        mypayment.set_customer_info(name=self.request.user.username, email='johndoe@email.com', address1=f'{billing_address.apartment_address + billing_address.street_address}', address2=f'{billing_address.apartment_address + billing_address.street_address}', city='Dhaka', postcode='1207', country='Bangladesh', phone='01711111111')
+        mypayment.set_shipping_info(shipping_to=f'{billing_address.apartment_address + billing_address.street_address}', address=f'{billing_address.apartment_address + billing_address.street_address}', city='Dhaka', postcode='1209', country='Bangladesh')
+        response_data = mypayment.init_payment()
+        return redirect(response_data['GatewayPageURL'])
+
+
+@csrf_exempt
+def complete(request):
+    if request.method == "POST" or request.method == "post":
+        payment_data = request.POST
+        status = payment_data['status']
+        if status == 'VALID':
+            messages.success(request, "SSL Payment Successfull")
+            return redirect('core:complete_payment', tran_id=payment_data['tran_id'], payment_type="SSL")
+        elif status == 'FAILED':
+            messages.warning(request, "SSL Payment Failed")
+    return render(request, 'complete.html', {})
+
+
+@login_required
+def complete_payment(request, tran_id, payment_type):
+    order = Cart.objects.get(user=request.user, ordered=False)
+    amount = int(order.get_total())
+    payment = Payment()
+    payment.user = request.user
+    payment.amount = amount
+    if payment_type == "S":
+        payment.stripe_charge_id = tran_id
+    elif payment_type == "SSL":
+        payment.ssl_charge_id = tran_id
+    payment.save()
+
+    order.ordered = True
+    order.payment = payment
+    order.reference_code = generate_reference_code()
+    order.save()
+    users_order = OrderItem.objects.filter(user=request.user, ordered=False)
+    for order in users_order:
+        order.ordered = True
+        order.save()
+    return HttpResponseRedirect(reverse('core:item_list'))
+    
+    
