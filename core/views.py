@@ -549,11 +549,17 @@ class SSLPayment(LoginRequiredMixin, View):
         amount = int(order.get_total())
         billing_address = Address.objects.filter(user=self.request.user)[0]
         status_url = self.request.build_absolute_uri(reverse('core:complete'))
-        mypayment = SSLCSession(sslc_is_sandbox=True, sslc_store_id=settings.SSLC_STORE_ID, sslc_store_pass=settings.SSLC_STORE_PASSWORD)
+        mypayment = SSLCSession(sslc_is_sandbox=True, sslc_store_id=settings.SSLC_STORE_ID,
+                                sslc_store_pass=settings.SSLC_STORE_PASSWORD)
         mypayment.set_urls(success_url=status_url, fail_url=status_url, cancel_url=status_url, ipn_url=status_url)
         mypayment.set_product_integration(total_amount=Decimal(f'{amount}'), currency='BDT', product_category='clothing', product_name='demo-product', num_of_item=no_of_items, shipping_method='YES', product_profile=userprofile)
-        mypayment.set_customer_info(name=self.request.user.username, email='johndoe@email.com', address1=f'{billing_address.apartment_address + billing_address.street_address}', address2=f'{billing_address.apartment_address + billing_address.street_address}', city='Dhaka', postcode='1207', country='Bangladesh', phone='01711111111')
-        mypayment.set_shipping_info(shipping_to=f'{billing_address.apartment_address + billing_address.street_address}', address=f'{billing_address.apartment_address + billing_address.street_address}', city='Dhaka', postcode='1209', country='Bangladesh')
+        mypayment.set_customer_info(name=self.request.user.username, email='johndoe@email.com',
+                                    address1=f'{billing_address.apartment_address + billing_address.street_address}',
+                                    address2=f'{billing_address.apartment_address + billing_address.street_address}',
+                                    city='Dhaka', postcode='1207', country='Bangladesh', phone='01711111111')
+        mypayment.set_shipping_info(shipping_to=f'{billing_address.apartment_address + billing_address.street_address}',
+                                    address=f'{billing_address.apartment_address + billing_address.street_address}',
+                                    city='Dhaka', postcode='1209', country='Bangladesh')
         response_data = mypayment.init_payment()
         return redirect(response_data['GatewayPageURL'])
 
@@ -593,5 +599,4 @@ def complete_payment(request, tran_id, payment_type):
         order.ordered = True
         order.save()
     return HttpResponseRedirect(reverse('core:item_list'))
-    
-    
+
