@@ -8,7 +8,6 @@ from .models import Comment
 CHOICE_FIELDS = (
     ('S', 'Stripe'),
     ('P', 'Paypal'),
-    ('SSL', 'SSL Ecommerce')
 )
 
 

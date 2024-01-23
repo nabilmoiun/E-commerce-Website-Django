@@ -1,5 +1,6 @@
 media
 form.txt
+db.sqlite3
 credentials.txt
 ecom/
 # Byte-compiled / optimized / DLL files

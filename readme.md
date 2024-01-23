@@ -3,8 +3,6 @@ E-commerce Website
 
 This is an E-commerce website developed mainly to focus on Django following along the ***justdjango*** channel. I used a free template from [mdbootstrap](https://mdbootstrap.com/snippets/jquery/mdbootstrap/50504?action=full_screen_mode) and developed most common features that an usual E-commerce website contains. I wrote both ***generic class based*** and ***functional*** views in the backend. The database I am using is the default django's ***Sqlite***. Another interesting thing was using the ***Stripe Api*** for handling the payment process.
 
-I have also deployed the project on [pythonanywhere.com](http://nabil.pythonanywhere.com/). The project can be viewed live on this domain ***nabil.pythonanywhere.com***
-
 Here I am noting down some of the features below and I will instruct you through the process to this run this project on your local machine if you are interested.
 
 
@@ -44,7 +42,7 @@ Django E-commerce Website App's directory structure looks as follows::
 Suggestion
 ====================
 
-I recommend you to have ***python >= 3.6*** installed on your machine to use this app. BTW I have used the version ***python 3.8*** though :)
+You must have python 3.8 or greater installed on your machine.
 
 # Usage
 
@@ -126,8 +124,3 @@ Add some items to the ***Item*** model in the admin then you can make your hands
 Stripe
 ====================
 I have used ***Stripe*** for handling payment of the order. Stripe officially provides card numbers for the testing purpose of their API's. So use  ***Card Number 4242 4242 4242 4242*** and specify a future a date like ***12/30*** in MM while filling up the payment form for an order to make.
-
-Deployment
-====================
-
-As I have mentioned firstly, the project in deployed on [pythonanywhere.com](http://nabil.pythonanywhere.com/) with free hosting facility and can be viewed live on this domain ***nabil.pythonanywhere.com***

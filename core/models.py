@@ -124,7 +124,7 @@ class Address(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     street_address = models.CharField(max_length=100)
     apartment_address = models.CharField(max_length=100)
-    country = CountryField(multiple=True)
+    country = models.CharField(max_length=200, choices=CountryField().choices + [('', 'Select Country')])
     zip_code = models.CharField(max_length=100)
     address_type = models.CharField(max_length=1, choices=ADDRESS_CHOICES)
     is_default = models.BooleanField(default=False)
