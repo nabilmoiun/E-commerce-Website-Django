@@ -200,15 +200,6 @@ button:hover {
   // Add an instance of the card Element into the `card-element` <div>.
   card.mount('#card-element');
 
-  // Handle real-time validation errors from the card Element.
-  card.addEventListener('change', function(event) {
-    var displayError = document.getElementById('card-errors');
-    if (event.error) {
-      displayError.textContent = event.error.message;
-    } else {
-      displayError.textContent = '';
-    }
-  });
 
   // Handle form submission.
   var form = document.getElementById('stripe-form');
@@ -240,20 +231,22 @@ button:hover {
     // Submit the form
     form.submit();
   }
+// Handle real-time validation errors from the card Element.
+  const currentCardForm = document.querySelector(".current-card-form");
+  const newCardForm = document.querySelector(".new-card-form");
 
-  var currentCardForm = $('.current-card-form');
-  currentCardForm.hide()
-  var newCardForm = $('.new-card-form');
-  var use_default_card = document.querySelector("input[name=use_default_card]");
-  use_default_card.addEventListener('change', function() {
-    if (this.checked) {
-      newCardForm.hide();
-      currentCardForm.show()
-    } else {
-      newCardForm.show();
-      currentCardForm.hide()
-    }
-  })
+  currentCardForm.style.display = "none";
+
+  const useDefaultCard = document.querySelector("#use_default_card");
+
+  if (useDefaultCard) {
+      useDefaultCard.addEventListener("change", function () {
+          currentCardForm.style.display = this.checked ? "block" : "none";
+          newCardForm.style.display = this.checked ? "none" : "block";
+      });
+  }
+
+
 
 </script>
 

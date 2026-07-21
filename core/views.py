@@ -1,6 +1,5 @@
 import random
 import string
-import socket
 
 import stripe
 from django.conf import settings
@@ -11,11 +10,8 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import ListView, DeleteView, View
-from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import render, get_object_or_404, redirect, reverse, HttpResponseRedirect
 
-import requests
-from decimal import Decimal
 
 from .forms import CheckoutForm, CouponForm, RefundForm, CommentForm
 from .models import (Item, Cart, OrderItem, Address, Comment, Payment, Coupon,
@@ -400,11 +396,13 @@ class PaymentView(LoginRequiredMixin, View):
         userprofile = UserProfile.objects.get(user=self.request.user)
         amount = int(order.get_total())
         stripe_charge_token = self.request.POST.get('stripeToken')
+        print("stripe charge token", stripe_charge_token)
         save = self.request.POST.get('save')
         user_default = self.request.POST.get('use_default')
 
         # To do for if the user wants to save card information for future purpose or not
         if save:
+            print("save address")
             """
             If user is not registered with stripe_customer_id Create the new customer instance
             and store information to the UserProfile model
@@ -415,9 +413,9 @@ class PaymentView(LoginRequiredMixin, View):
             if not userprofile.stripe_customer_id:
                 customer = stripe.Customer.create(
                     email=str(self.request.user.email),
-                    name=self.request.user.username
+                    name=self.request.user.username,
+                    source=stripe_charge_token
                 )
-                customer.create(source=stripe_charge_token)
                 userprofile.stripe_customer_id = customer['id']
                 userprofile.on_click_purchasing = True
                 userprofile.save()
@@ -425,7 +423,7 @@ class PaymentView(LoginRequiredMixin, View):
                 customer = stripe.Customer.retrieve(
                     userprofile.stripe_customer_id)
                 
-                customer.create(source=stripe_charge_token)
+                customer.sources.create(source=stripe_charge_token)
 
         # To do for saving payment information
         try:

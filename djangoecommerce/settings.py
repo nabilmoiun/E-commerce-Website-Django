@@ -1,16 +1,15 @@
 import os
 from decouple import config
+from pathlib import Path
 
-from django_countries.widgets import LazyChoicesMixin
 
+BASE_DIR = Path(__file__).parent.parent
 
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+SECRET_KEY = config('SECRET_KEY', cast=str, default="insecure-django-secret-key")
 
-SECRET_KEY = config('SECRET_KEY')
+DEBUG = config('DEBUG', cast=str, default="True") == "True"
 
-DEBUG = config('DEBUG')
-
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'nabil.pythonanywhere.com']
+ALLOWED_HOSTS = ["*"]
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -97,9 +96,9 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 MEDIA_URL = '/media/'
-STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static_in_env')]
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+STATICFILES_DIRS = [BASE_DIR / "static", ]
+STATIC_ROOT = BASE_DIR / "static_in_env"
+MEDIA_ROOT = BASE_DIR / "media"
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
@@ -116,16 +115,10 @@ LOGIN_REDIRECT_URL = '/'
 
 ACCOUNT_LOGOUT_REDIRECT_URL = "/accounts/login"
 
-STRIPE_SECRET_KEY = config('STRIPE_SECRET_KEY')
+STRIPE_SECRET_KEY = config('STRIPE_SECRET_KEY', cast=str, default="")
 
-STRIPE_PUBLISHABLE_KEY = config('STRIPE_PUBLISHABLE_KEY')
+SSLC_STORE_ID = config('SSLC_STORE_ID', cast=str, default="")
 
-SSLC_STORE_ID = config('SSLC_STORE_ID')
+SSLC_STORE_PASSWORD = config('SSLC_STORE_PASSWORD', cast=str, default="")
 
-SSLC_STORE_PASSWORD = config('SSLC_STORE_PASSWORD')
 
-LazyChoicesMixin.get_choices = lambda self: self._choices
-LazyChoicesMixin.choices = property(
-    LazyChoicesMixin.get_choices,
-    LazyChoicesMixin.set_choices
-)

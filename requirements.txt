@@ -1,9 +1,9 @@
-Django==5.0.1
-django-allauth==0.60.1
-django-countries==7.5.1
-django-crispy-forms==2.1
-crispy-bootstrap4==2023.1
-pillow==10.2.0
-requests==2.31.0
-stripe==7.13.0
+crispy-bootstrap4==2026.2
+Django==6.0.7
+django-allauth==65.18.0
+django-countries==9.0.0
+django-crispy-forms==2.6
+pillow==12.3.0
 python-decouple==3.8
+requests==2.34.2
+stripe==15.3.1
